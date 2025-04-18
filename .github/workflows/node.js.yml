@@ -1,0 +1,58 @@
+name: Build and Push Docker Images
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: \${{ secrets.DOCKERHUB_USERNAME }}
+          password: \${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push customer-service image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./customer
+          push: true
+          tags: mdocker3098/customer-service:latest
+
+      - name: Build and push inventory-service image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./inventory
+          push: true
+          tags: mdocker3098/inventory-service:latest
+
+      - name: Build and push payment-service image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./payment
+          push: true
+          tags: mdocker3098/payment-service:latest
+
+      - name: Build and push order-service image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./order
+          push: true
+          tags: mdocker3098/order-service:latest
+
+      - name: Build and push menu-service image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./menu
+          push: true
+          tags: mdocker3098/menu-service:latest
